@@ -8,33 +8,45 @@ using System.Data;
 
 namespace ConsoleApp1
 {
-    internal class Program
+    internal class Program : BestSeller
     {
         static void Main(string[] args)
         {
             try
             {
-                GetDataFromDB();
-                Console.WriteLine("ha funzionato");
-            }catch (Exception ex)
+                Console.WriteLine("*******************************************************************");
+
+                getBestSeller();
+                Console.WriteLine("*******************************************************************");
+
+
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+
             }
             Console.ReadLine();
         }
-        static void GetDataFromDB()
+
+
+
+        static private void ExecuteQuery(string query)
         {
-            string connectionString = "Data Source= (localdb)\\MSSQLLocalDB;Initial Catalog=GiuseppeUgarelliLIDL;Integrated Security= True";
-            string queryString = "SELECT * FROM Prodotti";
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            //variables declaration
+            string queryString;
+            SqlConnection connection;
+            SqlCommand command;
+
+            //variables iniatialization
+            queryString = $"{query}";
+
+            using (connection = GetDBConnection())
             {
-                SqlDataAdapter adapter = new SqlDataAdapter(queryString, connection);
-                DataTable dataTable = new DataTable();
-                adapter.Fill(dataTable);
+                command = new SqlCommand(queryString, connection);
+                connection.Open();
+                command.ExecuteNonQuery();
             }
-
-
-
         }
+
     }
 }
